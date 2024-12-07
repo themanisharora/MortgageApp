@@ -17,8 +17,8 @@ import org.springframework.util.ObjectUtils;
 @RequiredArgsConstructor
 public class MortgageServiceImpl implements MortgageService {
 
-    private TransactionRepository transactionRepository;
-    private AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
     @Override
     @Transactional
     public Boolean postTransaction(TransactionRequest transactionRequest) {
