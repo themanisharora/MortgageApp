@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Account {
     private AccountType type;
 
     @Column(name = "Available_Balance", columnDefinition = "DECIMAL(7,2)",nullable = false)
-    private Double availableBalance;
+    private BigDecimal availableBalance;
 
     @ManyToOne
     @JoinColumn(name = "Customer_Id", nullable = false)
