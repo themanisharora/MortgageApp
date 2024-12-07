@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Account {
 
     @Id
     @Column(name = "Account_Number", columnDefinition = "VARCHAR(30)")
-    private String accountNumber; // Primary Key
+    private Integer accountNumber; // Primary Key
 
     @Column(name = "Account_Type", columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)

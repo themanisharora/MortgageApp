@@ -1,8 +1,7 @@
 package com.hackathon.MortgageDemo.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +9,9 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "Transaction")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +22,7 @@ public class Transaction {
     @JoinColumn(name = "Source_Account", nullable = false)
     private Account sourceAccount;
 
-    @ManyToOne
-    @JoinColumn(name = "Target_Account", nullable = false)
-    private Account targetAccount;
+    private Integer targetAccount;
 
     @Column(name = "Transaction_Amount", columnDefinition = "DECIMAL(10,2)",nullable = false)
     private Double transactionAmount;
