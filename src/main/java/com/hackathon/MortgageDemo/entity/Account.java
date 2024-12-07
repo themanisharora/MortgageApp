@@ -22,14 +22,14 @@ public class Account {
 
     @Id
     @Column(name = "Account_Number", columnDefinition = "VARCHAR(30)")
-    private String accountNumber; // Primary Key
+    private Integer accountNumber; // Primary Key
 
     @Column(name = "Account_Type", columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private AccountType type;
 
     @Column(name = "Available_Balance", columnDefinition = "DECIMAL(7,2)",nullable = false)
-    private BigDecimal availableBalance;
+    private Double availableBalance;
 
     @ManyToOne
     @JoinColumn(name = "Customer_Id", nullable = false)

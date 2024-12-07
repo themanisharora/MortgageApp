@@ -20,26 +20,38 @@ public class MortgageServiceImpl implements MortgageService {
     private TransactionRepository transactionRepository;
     private AccountRepository accountRepository;
     @Override
+    @Transactional
     public Boolean postTransaction(TransactionRequest transactionRequest) {
         try{
-            Account account = accountRepository.findByAccountNumberAndAvailableBalanceGreaterThan(transactionRequest.getFromAccount(),transactionRequest.getAmount());
-            Transaction transaction = Transaction.builder().transactionAmount(transactionRequest.getAmount()).transactionRemarks(
-                    transactionRequest.getRemarks()
-            ).sourceAccount(account)
-                    .targetAccount(transactionRequest.getToAccount()).build();
-            if(!ObjectUtils.isEmpty(account)){
-                try{
-                    performTransaction(transaction);
-                }catch(Exception e){
-                    log.error(e.getMessage());
-                }
+            Account fromAccountDetails = accountRepository.findByAccountNumberAndAvailableBalanceGreaterThan(transactionRequest.getFromAccount(),transactionRequest.getAmount());
+            Account toAccountDetails = accountRepository.findByAccountNumberAndAvailableBalanceGreaterThan(transactionRequest.getToAccount(),transactionRequest.getAmount());
+            if(!ObjectUtils.isEmpty(fromAccountDetails)
+                    && fromAccountDetails.getAvailableBalance()
+                    > transactionRequest.getAmount()){
+
+                    directionCall(fromAccountDetails,toAccountDetails,transactionRequest.getAmount());
+                    Transaction transaction = Transaction.builder().transactionAmount(transactionRequest.getAmount()).transactionRemarks(
+                                    transactionRequest.getRemarks()
+                            ).sourceAccount(fromAccountDetails)
+                            .targetAccount(transactionRequest.getToAccount()).build();
+                   return performTransaction(transaction);
             }
         } catch (Exception e){
             log.error(e.getMessage());
         }
-        return true;
+        return false;
     }
-    @Transactional
+    private void directionCall(Account fromAccount,Account toAccount, Double requestAmount) throws Exception{
+        if(!ObjectUtils.isEmpty(fromAccount)) {
+            accountRepository.updateAvailableBalanceByAccountNumberAllIgnoreCase(fromAccount.getAvailableBalance()-requestAmount
+                    ,fromAccount.getAccountNumber());
+        }
+        if(!ObjectUtils.isEmpty(toAccount)) {
+            accountRepository.updateAvailableBalanceByAccountNumberAllIgnoreCase(toAccount.getAvailableBalance()+requestAmount
+                    ,toAccount.getAccountNumber());
+        }
+    }
+
     protected Boolean performTransaction(Transaction transaction) {
 
         transactionRepository.save(transaction);
