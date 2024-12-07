@@ -13,6 +13,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 @Component
@@ -28,11 +30,6 @@ public class AuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        //Comment to enable
-        filterChain.doFilter(request, response);
-        return;
-
         if (request.getServletPath().startsWith("/auth")) {
             filterChain.doFilter(request, response);
         }
@@ -58,7 +55,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private void handleBasicAuth(HttpServletRequest request,
                                  HttpServletResponse response,
-                                 FilterChain filterChain) throws ServletException, IOException {
+                                 FilterChain filterChain) throws Exception {
         final String authorization = request.getHeader("Authorization");
         String base64Credentials = authorization.substring("Basic".length()).trim();
         String[] values = decodeAuth(base64Credentials);
@@ -92,7 +89,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
 
-    private boolean validAuth(String username, String password) {
+    private boolean validAuth(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
         return authService.authenticate(username, password);
     }
 
