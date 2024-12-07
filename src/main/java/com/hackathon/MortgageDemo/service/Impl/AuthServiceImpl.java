@@ -20,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Value("${salt.simple}")
     private String simpleSalt;

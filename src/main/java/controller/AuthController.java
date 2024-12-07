@@ -31,7 +31,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth")
-    public ResponseEntity<BaseResponse<String>> authenticate(@RequestBody LoginRequest request) {
+    public ResponseEntity<BaseResponse<String>> authenticate(@RequestBody LoginRequest request) throws Exception {
         boolean validAuth = authService.authenticate(request.getUsername(), request.getPassword());
         if (!validAuth) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
